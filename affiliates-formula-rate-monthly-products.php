@@ -123,10 +123,17 @@ class Affiliates_Formula_Rate_Monthly_Products {
 	 * @return int
 	 */
 	public static function get_order_item_count( $order = null ) {
-		$result = null;
-		if ( function_exists( 'wc_get_order' ) ) {
-			if ( $order ) {
-				$result = $order->get_item_count();
+		$result = 0;
+		if ( $order ) {
+			$order_items = $order->get_items();
+			foreach ( $order_items as $item ) {
+				$product = $item->get_product();
+				if ( $product ) {
+					$product_category_ids = $product->get_category_ids();
+					if ( in_array( 55, $product_category_ids ) || in_array( 56, $product_category_ids ) ) {
+						$result += $order->get_item_count();
+					}
+				}
 			}
 		}
 		return intval( $result );
